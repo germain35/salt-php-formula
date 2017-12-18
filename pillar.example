@@ -1,0 +1,20 @@
+php:
+  packages:
+    - pear
+    - fpm
+  extensions:
+    - xml
+  ini:
+    PHP:
+      memory_limit: '256M'
+  fpm:
+    conf:
+      global:
+        pid: '/var/run/php/php7.0-fpm.pid'
+    pools:
+      www:
+        listen: 127.0.0.1:9001
+        listen_backlog: 1024
+        user: www-data
+        pm: ondemand
+        pm_max_children: 10

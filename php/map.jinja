@@ -1,0 +1,89 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{%- set osfamily   = salt['grains.get']('os_family') %}
+{%- set os         = salt['grains.get']('os') %}
+{%- set osrelease  = salt['grains.get']('osrelease') %}
+{%- set oscodename = salt['grains.get']('oscodename') %}
+
+{## Start with defaults from defaults.yaml ##}
+{% import_yaml 'php/defaults.yaml' as default_settings %}
+
+{% set version = salt['grains.filter_by']({
+    'Debian': salt['grains.filter_by']({
+        'Debian': salt['grains.filter_by']({
+            'jessie': '5.x',
+            'stretch': '7.0',
+            'default': '7.0'
+        }, grain="oscodename"),
+        'Ubuntu': salt['grains.filter_by']({
+            'xenial': '7.0',
+            'zesty': '7.0',
+            'default': '7.0'
+        }, grain="oscodename"),
+    }, grain="os"),
+}
+, grain="os_family"
+, merge=salt['pillar.get']('php:version')) %}
+
+
+{% if osfamily == 'Debian' %}
+    {% if version|regex_search('^7.*') > 0 %}
+        {% set globals_map = {
+            'conf_root': '/etc/php/' ~ version,
+            'fpm_pid_file': '/var/run/php/php' ~ version ~ '-fpm.pid',
+            'fpm_error_log': '/var/log/php' ~ version ~ '-fpm.log',
+            'fpm_listen': '/run/php/php' ~ version ~ '-fpm.sock',
+            'fpm_service': 'php' ~ version ~ '-fpm',
+            'package_prefix': 'php' ~ version ~ '-'
+        } %}
+    {% else %}
+        {% set globals_map = {
+            'conf_root': '/etc/php5',
+            'fpm_pid_file': '/var/run/php5-fpm.pid',
+            'fpm_error_log': '/var/log/php5-fpm.log',
+            'fpm_listen': '/run/php/php5-fpm.sock',
+            'fpm_service': 'php5-fpm',
+            'package_prefix': 'php5-'
+        } %}
+    {% endif %}
+{% endif %}
+
+{## Merge the globals_map to the default settings ##}
+{% do default_settings.php.update(globals_map) %}
+
+{##
+Setup variables using grains['os_family'] based logic, only add key:values
+that differ from what is in defaults.yaml
+##}
+{% set os_family_map = salt['grains.filter_by']({
+    'Debian': {
+        'conf_root_ini': default_settings.php.conf_root ~ '/mods-available',
+        'conf_root_ini_file': default_settings.php.conf_root ~ '/php.ini',
+        'cli_ini_file': default_settings.php.conf_root ~ '/cli/php.ini',
+        'common_package_suffixes': ['cli', 'common'],
+        'cli_package_suffix': 'cli',
+        'fpm_package_suffix': 'fpm',
+        'fpm_conf_file': default_settings.php.conf_root ~ '/fpm/php-fpm.conf',
+        'fpm_ini_file': default_settings.php.conf_root ~ '/fpm/php.ini',
+        'fpm_pool_dir': default_settings.php.conf_root ~ '/fpm/pool.d',
+        'fpm_user': 'www-data',
+        'fpm_group': 'www-data',
+        'apache_ini_file': default_settings.php.conf_root ~ '/apache2/php.ini',
+        'embedded_ini_file': default_settings.php.conf_root ~ '/embedded/php.ini',
+        'embedded_package_suffix': 'embed',
+        'compiler_packages': ['build-essential']
+    }
+}
+, grain="os_family"
+, merge=salt['pillar.get']('php:lookup')) %}
+
+{## Merge the flavor_map to the default settings ##}
+{% do default_settings.php.update(os_family_map) %}
+
+{## Merge in php:lookup pillar ##}
+{% set php = salt['pillar.get'](
+    'php',
+    default=default_settings.php,
+    merge=True
+) %}

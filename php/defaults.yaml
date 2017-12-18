@@ -1,0 +1,9 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+php:
+  packages:
+    - pear
+  pear_package_suffix: 'pear'
+  fpm_service_enabled: True
+  fpm_service_reload: False
+
