@@ -9,15 +9,19 @@ include:
   {%- for pool, params in php.fpm.pools.iteritems() %}
 
     {%- if params.group is defined %}
-php_fpm_pool_{{pool}}_group_{{ params.group }}:
+php_fpm_pool_{{pool}}_group:
   group.present:
-    - name: { params.group }}
+    - name: {{ params.group }}
+    - require_in:
+      - file: php_fpm_pool_{{pool}}
     {%- endif %}
 
     {%- if params.user is defined %}
-php_fpm_pool_{{pool}}_user_{{ params.user }}:
+php_fpm_pool_{{pool}}_user:
   user.present:
-    - name: { params.user }}
+    - name: {{ params.user }}
+    - require_in:
+      - file: php_fpm_pool_{{pool}}
     {%- endif %}
 
 php_fpm_pool_{{pool}}:
