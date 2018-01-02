@@ -2,7 +2,7 @@
 
 php_common_packages:
   pkg.installed:
-    - pkg:
+    - pkgs:
       {%- for common_suffix in php.common_package_suffixes %}
       - {{ php.package_prefix ~ common_suffix }}
       {%- endfor %}
