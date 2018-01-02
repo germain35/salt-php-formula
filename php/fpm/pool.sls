@@ -20,6 +20,7 @@ php_fpm_pool_{{pool}}_group:
 php_fpm_pool_{{pool}}_user:
   user.present:
     - name: {{ params.user }}
+    - gid_from_name: True
     - require_in:
       - file: php_fpm_pool_{{pool}}
     {%- endif %}
