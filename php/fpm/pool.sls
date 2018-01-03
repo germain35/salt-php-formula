@@ -7,24 +7,26 @@ include:
 
 {%- if php.fpm is defined and php.fpm.pools is defined %}
   {%- for pool, params in php.fpm.pools.iteritems() %}
-
-    {%- if params.group is defined %}
+    
+    {%- if php.manage_users %}
+      {%- if params.group is defined %}
 php_fpm_pool_{{pool}}_group:
   group.present:
     - name: {{ params.group }}
     - require_in:
       - file: php_fpm_pool_{{pool}}
-    {%- endif %}
+      {%- endif %}
 
-    {%- if params.user is defined %}
+      {%- if params.user is defined %}
 php_fpm_pool_{{pool}}_user:
   user.present:
     - name: {{ params.user }}
     - gid_from_name: True
     - require_in:
       - file: php_fpm_pool_{{pool}}
+      {%- endif %}
     {%- endif %}
-
+    
 php_fpm_pool_{{pool}}:
   file.managed:
     - name: {{ php.fpm_pool_dir ~ '/' ~ pool ~ '.conf' }}

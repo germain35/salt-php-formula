@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ft=yaml
 php:
+  manage_users: False
   packages:
     - pear
   pear_package_suffix: 'pear'
