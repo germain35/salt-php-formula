@@ -12,6 +12,9 @@ include:
   {%- if 'fpm' in php.packages %}
   - php.fpm
   {%- endif %}
+  {%- if php.packages is defined %}
+  - php.packages
+  {%- endif %}
   {%- if php.extensions is defined %}
   - php.extension
   {%- endif %}
