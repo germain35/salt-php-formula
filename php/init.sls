@@ -3,13 +3,13 @@
 
 include:
   - php.common
-  {%- if pear_enabled %}
+  {%- if php.pear_enabled %}
   - php.pear
   {%- endif %}
-  {%- if cli_enabled %}
+  {%- if php.cli_enabled %}
   - php.cli
   {%- endif %}
-  {%- if fpm_enabled %}
+  {%- if php.fpm_enabled %}
   - php.fpm
   {%- endif %}
   {%- if php.packages is defined %}
