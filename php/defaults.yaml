@@ -2,8 +2,9 @@
 # vim: ft=yaml
 php:
   manage_users: False
-  packages:
-    - pear
+  cli_enabled: True
+  pear_enabled: True
+  fpm_enabled: False
   pear_package_suffix: 'pear'
   fpm_service_enabled: True
   fpm_service_reload: False
