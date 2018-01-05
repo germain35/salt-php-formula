@@ -11,7 +11,7 @@ php_extension_{{extension.name}}_header_packages:
   pkg.installed:
     - pkgs: {{ extension.header_packages }}
     - require_in:
-      - pecl: php_extension_{{extenstion.name}}
+      - pecl: php_extension_{{extension.name}}
     {%- endif %}
 php_extension_{{extension.name}}:
   pecl.installed:
