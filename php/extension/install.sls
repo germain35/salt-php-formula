@@ -6,13 +6,20 @@ include:
 
 {%- for extension in php.extensions %}
   {%- if extension is mapping and extension.provider is defined and extension.provider == 'pecl' %}
-php_{{extension.keys()[0]}}_extension:
+    {%- if extension.header_packages is defined %}
+php_extension_{{extension.keys()[0]}}_header_packages:
+  pkg.installed:
+    - pkgs: {{ extension.header_packages }}
+    - require_in:
+      - pecl: php_extension_{{extension.keys()[0]}}
+    {%- endif %}
+php_extension_{{extension.keys()[0]}}:
   pecl.installed:
     - name: {{extension.keys()[0]}}
     - require:
       - pkg: php_pear_package
   {%- else %}
-php_{{extension}}_extension:
+php_extension_{{extension}}:
   pkg.installed:
     - name: {{ php.package_prefix ~ extension }}
   {%- endif %}

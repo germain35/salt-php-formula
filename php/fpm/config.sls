@@ -5,11 +5,11 @@ include:
   - php.fpm.service
 
 
-{%- if php.fpm is defined and php.fpm.conf is defined %}
+{%- if php.fpm is defined and php.fpm.config is defined %}
 php_fpm_conf_file:
   ini.options_present:
     - name: {{ php.fpm_conf_file }}
-    - sections: {{ php.fpm.conf }}
+    - sections: {{ php.fpm.config }}
     - require:
       - pkg: php_fpm_package
     - watch_in:
