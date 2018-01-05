@@ -8,7 +8,7 @@ php:
     PHP:
       memory_limit: '256M'
   fpm:
-    conf:
+    config:
       global:
         pid: '/var/run/php/php7.0-fpm.pid'
     pools:
