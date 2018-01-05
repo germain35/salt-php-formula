@@ -1,9 +1,11 @@
 php:
   packages:
-    - pear
-    - fpm
-  extensions:
     - xml
+    - mcrypt
+    - zip
+  extensions:
+    - name: amqp
+      provider: pecl
   ini:
     PHP:
       memory_limit: '256M'
@@ -13,8 +15,8 @@ php:
         pid: '/var/run/php/php7.0-fpm.pid'
     pools:
       www:
-        listen: 127.0.0.1:9001
+        listen: 127.0.0.1:9000
         listen_backlog: 1024
         user: www-data
-        pm: ondemand
+        pm: dynamic
         pm_max_children: 10

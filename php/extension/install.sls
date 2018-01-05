@@ -7,20 +7,20 @@ include:
 {%- for extension in php.get('extensions', []) %}
   {%- if extension is mapping and extension.provider is defined and extension.provider == 'pecl' %}
     {%- if extension.header_packages is defined %}
-php_extension_{{extension.keys()[0]}}_header_packages:
+php_extension_{{extension.name}}_header_packages:
   pkg.installed:
     - pkgs: {{ extension.header_packages }}
     - require_in:
-      - pecl: php_extension_{{extension.keys()[0]}}
+      - pecl: php_extension_{{extenstion.name}}
     {%- endif %}
-php_extension_{{extension.keys()[0]}}:
+php_extension_{{extension.name}}:
   pecl.installed:
-    - name: {{extension.keys()[0]}}
+    - name: {{extension.name}}
     - require:
       - pkg: php_pear_package
   {%- else %}
-php_extension_{{extension}}:
+php_extension_{{extension.name}}:
   pkg.installed:
-    - name: {{ php.package_prefix ~ extension }}
+    - name: {{ php.package_prefix ~ extension.name }}
   {%- endif %}
 {%- endfor %}
