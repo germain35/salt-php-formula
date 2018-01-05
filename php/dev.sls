@@ -2,4 +2,4 @@
 
 php_dev_package:
   pkg.installed:
-    - name: {{ php.package_prefix ~ dev_package_suffix }}
+    - name: {{ php.package_prefix ~ php.dev_package_suffix }}
