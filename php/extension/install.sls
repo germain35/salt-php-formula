@@ -23,7 +23,7 @@ php_extension_{{extension.name}}_ini_file:
   file.prepend:
     - name: {{ php.conf_root_ini | path_join(extension.name ~ '.ini') }}
     - text:
-      - extension = {{extension.name}}.so
+      - extension={{extension.name}}.so
     - require:
       - pecl: php_extension_{{extension.name}}
   {%- else %}
