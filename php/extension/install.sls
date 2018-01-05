@@ -2,6 +2,7 @@
 
 include:
   - php.common
+  - php.dev
   - php.pear
 
 {%- for extension in php.get('extensions', []) %}
@@ -18,6 +19,13 @@ php_extension_{{extension.name}}:
     - name: {{extension.name}}
     - require:
       - pkg: php_pear_package
+php_extension_{{extension.name}}_ini_file:
+  file.prepend:
+    - name: {{ php.conf_root_ini | path_join(extension.name ~ '.ini') }}
+    - text:
+      - extension = {{extension.name}}.so
+    - require:
+      - pecl: php_extension_{{extension.name}}
   {%- else %}
 php_extension_{{extension.name}}:
   pkg.installed:
