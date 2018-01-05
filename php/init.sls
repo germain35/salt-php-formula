@@ -3,6 +3,9 @@
 
 include:
   - php.common
+  {%- if php.dev_enabled %}
+  - php.dev
+  {%- endif %}
   {%- if php.pear_enabled %}
   - php.pear
   {%- endif %}

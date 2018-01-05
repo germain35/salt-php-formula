@@ -4,7 +4,7 @@ include:
   - php.common
   - php.pear
 
-{%- for extension in php.extensions %}
+{%- for extension in php.get('extensions', []) %}
   {%- if extension is mapping and extension.provider is defined and extension.provider == 'pecl' %}
     {%- if extension.header_packages is defined %}
 php_extension_{{extension.keys()[0]}}_header_packages:
