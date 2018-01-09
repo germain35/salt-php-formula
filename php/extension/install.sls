@@ -23,6 +23,15 @@ php_extension_{{extension.name}}_header_packages:
 php_extension_{{extension.name}}:
   pecl.installed:
     - name: {{extension.name}}
+    {%- if extension.version is defined %}
+    - version: {{extension.version}}
+    {%- endif %}
+    {%- if extension.defaults is defined %}
+    - defaults: {{extension.defaults}}
+    {%- endif %}
+    {%- if extension.force is defined %}
+    - force: {{extension.force}}
+    {%- endif %}
     - require:
       - pkg: php_pear_package
 
