@@ -35,7 +35,8 @@
             'fpm_error_log': '/var/log/php' ~ version ~ '-fpm.log',
             'fpm_listen': '/run/php/php' ~ version ~ '-fpm.sock',
             'fpm_service': 'php' ~ version ~ '-fpm',
-            'package_prefix': 'php' ~ version ~ '-'
+            'package_prefix': 'php' ~ version ~ '-',
+            'ext_tool_enable': 'phpenmod'
         } %}
     {% else %}
         {% set globals_map = {
@@ -44,7 +45,8 @@
             'fpm_error_log': '/var/log/php5-fpm.log',
             'fpm_listen': '/run/php/php5-fpm.sock',
             'fpm_service': 'php5-fpm',
-            'package_prefix': 'php5-'
+            'package_prefix': 'php5-',
+            'ext_tool_enable': 'php5enmod'
         } %}
     {% endif %}
 {% endif %}

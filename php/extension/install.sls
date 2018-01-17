@@ -45,19 +45,13 @@ php_extension_{{extension.name}}_ini_file:
 
     {%- if php.fpm_enabled %}
 
-php_extension_{{extension.name}}_cgi_symlink:
-  file.symlink:
-    - name: {{ php.cgi_conf_dir | path_join('20-' ~ extension.name ~ '.ini') }}
-    - target: {{ php.conf_root_ini | path_join(extension.name ~ '.ini') }}
-    - force: True
-    - makedirs: True
+php_extension_{{extension.name}}_cgi_enable:
+  cmd.run:
+    - name: {{ php.ext_tool_enable }} -s cgi {{ extension.name }}
 
-php_extension_{{extension.name}}_fpm_symlink:
-  file.symlink:
-    - name: {{ php.fpm_conf_dir | path_join('20-' ~ extension.name ~ '.ini') }}
-    - target: {{ php.conf_root_ini | path_join(extension.name ~ '.ini') }}
-    - force: True
-    - makedirs: True
+php_extension_{{extension.name}}_fpm_enable:
+  cmd.run:
+    - name: {{ php.ext_tool_enable }} -s fpm {{ extension.name }}
     - watch_in:
       - service: php_fpm_service
 
@@ -65,12 +59,9 @@ php_extension_{{extension.name}}_fpm_symlink:
 
     {%- if php.cli_enabled %}
 
-php_extension_{{extension.name}}_cli_symlink:
-  file.symlink:
-    - name: {{ php.cli_conf_dir | path_join('20-' ~ extension.name ~ '.ini') }}
-    - target: {{ php.conf_root_ini | path_join(extension.name ~ '.ini') }}
-    - force: True
-    - makedirs: True
+php_extension_{{extension.name}}_cli_enable:
+  cmd.run:
+    - name: {{ php.ext_tool_enable }} -s cli {{ extension.name }}
 
     {%- endif %}
   {%- else %}
