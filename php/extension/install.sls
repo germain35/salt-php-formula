@@ -50,6 +50,7 @@ php_extension_{{extension.name}}_cgi_enable:
     - name: {{ php.ext_tool_enable }} -s cgi {{ extension.name }}
     - require:
       - pecl: php_extension_{{extension.name}}
+      - file: php_extension_{{extension.name}}_ini_file
 
 php_extension_{{extension.name}}_fpm_enable:
   cmd.run:
@@ -58,6 +59,7 @@ php_extension_{{extension.name}}_fpm_enable:
       - service: php_fpm_service
     - require:
       - pecl: php_extension_{{extension.name}}
+      - file: php_extension_{{extension.name}}_ini_file
 
     {%- endif %}
 
@@ -68,6 +70,7 @@ php_extension_{{extension.name}}_cli_enable:
     - name: {{ php.ext_tool_enable }} -s cli {{ extension.name }}
     - require:
       - pecl: php_extension_{{extension.name}}
+      - file: php_extension_{{extension.name}}_ini_file
 
     {%- endif %}
   {%- else %}
