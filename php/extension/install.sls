@@ -48,12 +48,16 @@ php_extension_{{extension.name}}_ini_file:
 php_extension_{{extension.name}}_cgi_enable:
   cmd.run:
     - name: {{ php.ext_tool_enable }} -s cgi {{ extension.name }}
+    - require:
+      - pecl: php_extension_{{extension.name}}
 
 php_extension_{{extension.name}}_fpm_enable:
   cmd.run:
     - name: {{ php.ext_tool_enable }} -s fpm {{ extension.name }}
     - watch_in:
       - service: php_fpm_service
+    - require:
+      - pecl: php_extension_{{extension.name}}
 
     {%- endif %}
 
@@ -62,6 +66,8 @@ php_extension_{{extension.name}}_fpm_enable:
 php_extension_{{extension.name}}_cli_enable:
   cmd.run:
     - name: {{ php.ext_tool_enable }} -s cli {{ extension.name }}
+    - require:
+      - pecl: php_extension_{{extension.name}}
 
     {%- endif %}
   {%- else %}
