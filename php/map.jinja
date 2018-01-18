@@ -36,7 +36,7 @@
             'fpm_listen': '/run/php/php' ~ version ~ '-fpm.sock',
             'fpm_service': 'php' ~ version ~ '-fpm',
             'package_prefix': 'php' ~ version ~ '-',
-            'ext_tool_enable': 'phpenmod'
+            'ext_tool_enable': 'phpenmod -v ' ~ version
         } %}
     {% else %}
         {% set globals_map = {
