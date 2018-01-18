@@ -2,7 +2,7 @@
 
 php_compiler_packages:
   pkg.installed:
-    pkgs: {{ php.compiler_packages }}
+    - pkgs: {{ php.compiler_packages }}
 
 php_dev_package:
   pkg.installed:
