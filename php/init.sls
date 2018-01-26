@@ -3,6 +3,9 @@
 
 include:
   - php.common
+  {%- if php.packages is defined %}
+  - php.packages
+  {%- endif %}
   {%- if php.dev_enabled %}
   - php.dev
   {%- endif %}
@@ -14,9 +17,6 @@ include:
   {%- endif %}
   {%- if php.fpm_enabled %}
   - php.fpm
-  {%- endif %}
-  {%- if php.packages is defined %}
-  - php.packages
   {%- endif %}
   {%- if php.extensions is defined %}
   - php.extension
