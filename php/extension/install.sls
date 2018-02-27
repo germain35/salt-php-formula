@@ -20,7 +20,7 @@ php_extension_{{extension.name}}_header_packages:
 
     {%- endif %}
 
-{%- if salt['file.exists'](extension.name) %}
+{%- if salt['file.file_exists'](extension.name) %}
 php_extension_{{extension.name}}:
   cmd.run:
     - name: printf "\n" | pecl install --offline --force {{extension.name}}
