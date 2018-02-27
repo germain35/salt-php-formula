@@ -20,6 +20,15 @@ php_extension_{{extension.name}}_header_packages:
 
     {%- endif %}
 
+{%- if salt['file.exists'](extension.name) %}
+php_extension_{{extension.name}}:
+  cmd.run:
+    - name: printf "\n" | pecl install --offline --force {{extension.name}}
+    - require_in:
+      - file: php_extension_{{extension.name}}_ini_file
+    - require:
+      - pkg: php_pear_package
+{%- else %}
 php_extension_{{extension.name}}:
   pecl.installed:
     - name: {{extension.name}}
@@ -32,16 +41,17 @@ php_extension_{{extension.name}}:
     {%- if extension.force is defined %}
     - force: {{extension.force}}
     {%- endif %}
+    - require_in:
+      - file: php_extension_{{extension.name}}_ini_file
     - require:
       - pkg: php_pear_package
+{%- endif %}
 
 php_extension_{{extension.name}}_ini_file:
   file.prepend:
     - name: {{ php.conf_root_ini | path_join(extension.name ~ '.ini') }}
     - text:
       - extension={{extension.name}}.so
-    - require:
-      - pecl: php_extension_{{extension.name}}
 
     {%- if php.fpm_enabled %}
 
@@ -49,7 +59,6 @@ php_extension_{{extension.name}}_cgi_enable:
   cmd.run:
     - name: {{ php.ext_tool_enable }} -s cgi {{ extension.name }}
     - require:
-      - pecl: php_extension_{{extension.name}}
       - file: php_extension_{{extension.name}}_ini_file
 
 php_extension_{{extension.name}}_fpm_enable:
@@ -58,7 +67,6 @@ php_extension_{{extension.name}}_fpm_enable:
     - watch_in:
       - service: php_fpm_service
     - require:
-      - pecl: php_extension_{{extension.name}}
       - file: php_extension_{{extension.name}}_ini_file
 
     {%- endif %}
@@ -69,7 +77,6 @@ php_extension_{{extension.name}}_cli_enable:
   cmd.run:
     - name: {{ php.ext_tool_enable }} -s cli {{ extension.name }}
     - require:
-      - pecl: php_extension_{{extension.name}}
       - file: php_extension_{{extension.name}}_ini_file
 
     {%- endif %}
