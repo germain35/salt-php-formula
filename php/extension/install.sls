@@ -20,10 +20,10 @@ php_extension_{{extension.name}}_header_packages:
 
     {%- endif %}
 
-{%- if salt['file.file_exists'](extension.name) %}
+{%- if extension.source is defined and salt['file.file_exists'](extension.source) %}
 php_extension_{{extension.name}}:
   cmd.run:
-    - name: printf "\n" | pecl install --offline --force {{extension.name}}
+    - name: printf "\n" | pecl install --offline --force {{extension.source}}
     - require_in:
       - file: php_extension_{{extension.name}}_ini_file
     - require:
