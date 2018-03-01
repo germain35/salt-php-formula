@@ -8,83 +8,83 @@ include:
   - php.fpm.service
   {%- endif %}
 
-{%- for extension in php.get('extensions', []) %}
-  {%- if extension is mapping and extension.provider is defined and extension.provider == 'pecl' %}
-    {%- if extension.header_packages is defined %}
+{%- for extension, params in php.get('extensions', {}).iteritems() %}
+  {%- if params.provider == 'pecl' %}
+    {%- if params.header_packages is defined %}
 
-php_extension_{{extension.name}}_header_packages:
+php_extension_{{extension}}_header_packages:
   pkg.installed:
-    - pkgs: {{ extension.header_packages }}
+    - pkgs: {{ params.header_packages }}
     - require_in:
-      - pecl: php_extension_{{extension.name}}
+      - pecl: php_extension_{{extension}}
 
     {%- endif %}
 
-{%- if extension.source is defined and salt['file.file_exists'](extension.source) %}
-php_extension_{{extension.name}}:
+    {%- if params.source is defined and salt['file.file_exists'](params.source) %}
+php_extension_{{extension}}:
   cmd.run:
-    - name: printf "\n" | pecl install --offline --force {{extension.source}}
+    - name: printf "\n" | pecl install --offline --force {{params.source}}
     - require_in:
-      - file: php_extension_{{extension.name}}_ini_file
+      - file: php_extension_{{extension}}_ini_file
     - require:
       - pkg: php_pear_package
-{%- else %}
-php_extension_{{extension.name}}:
+    {%- else %}
+php_extension_{{extension}}:
   pecl.installed:
-    - name: {{extension.name}}
-    {%- if extension.version is defined %}
-    - version: {{extension.version}}
+    - name: {{extension}}
+    {%- if params.version is defined %}
+    - version: {{params.version}}
     {%- endif %}
-    {%- if extension.defaults is defined %}
-    - defaults: {{extension.defaults}}
+    {%- if params.defaults is defined %}
+    - defaults: {{params.defaults}}
     {%- endif %}
-    {%- if extension.force is defined %}
-    - force: {{extension.force}}
+    {%- if params.force is defined %}
+    - force: {{params.force}}
     {%- endif %}
     - require_in:
-      - file: php_extension_{{extension.name}}_ini_file
+      - file: php_extension_{{extension}}_ini_file
     - require:
       - pkg: php_pear_package
-{%- endif %}
+    {%- endif %}
 
-php_extension_{{extension.name}}_ini_file:
+php_extension_{{extension}}_ini_file:
   file.prepend:
-    - name: {{ php.conf_root_ini | path_join(extension.name ~ '.ini') }}
+    - name: {{ php.conf_root_ini | path_join(extension ~ '.ini') }}
     - text:
-      - extension={{extension.name}}.so
+      - extension={{extension}}.so
 
     {%- if php.fpm_enabled %}
 
-php_extension_{{extension.name}}_cgi_enable:
+php_extension_{{extension}}_cgi_enable:
   cmd.run:
-    - name: {{ php.ext_tool_enable }} -s cgi {{ extension.name }}
+    - name: {{ php.ext_tool_enable }} -s cgi {{ extension }}
     - require:
-      - file: php_extension_{{extension.name}}_ini_file
+      - file: php_extension_{{extension}}_ini_file
 
-php_extension_{{extension.name}}_fpm_enable:
+php_extension_{{extension}}_fpm_enable:
   cmd.run:
-    - name: {{ php.ext_tool_enable }} -s fpm {{ extension.name }}
+    - name: {{ php.ext_tool_enable }} -s fpm {{ extension }}
     - watch_in:
       - service: php_fpm_service
     - require:
-      - file: php_extension_{{extension.name}}_ini_file
+      - file: php_extension_{{extension}}_ini_file
 
     {%- endif %}
 
     {%- if php.cli_enabled %}
 
-php_extension_{{extension.name}}_cli_enable:
+php_extension_{{extension}}_cli_enable:
   cmd.run:
-    - name: {{ php.ext_tool_enable }} -s cli {{ extension.name }}
+    - name: {{ php.ext_tool_enable }} -s cli {{ extension }}
     - require:
-      - file: php_extension_{{extension.name}}_ini_file
+      - file: php_extension_{{extension}}_ini_file
 
     {%- endif %}
   {%- else %}
 
-php_extension_{{extension.name}}:
+php_extension_{{extension}}:
   pkg.installed:
-    - name: {{ php.package_prefix ~ extension.name }}
+    - name: {{ php.package_prefix ~ extension }}
 
   {%- endif %}
 {%- endfor %}

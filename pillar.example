@@ -4,7 +4,7 @@ php:
     - mcrypt
     - zip
   extensions:
-    - name: amqp
+    amqp:
       provider: pecl
   ini:
     PHP:
