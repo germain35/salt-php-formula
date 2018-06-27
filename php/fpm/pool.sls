@@ -6,7 +6,7 @@ include:
   - php.fpm.service
 
 {%- if php.fpm is defined and php.fpm.pools is defined %}
-  {%- for pool, params in php.fpm.pools.iteritems() %}
+  {%- for pool, params in php.fpm.pools.items() %}
     
     {%- if php.manage_users %}
       {%- if params.group is defined %}

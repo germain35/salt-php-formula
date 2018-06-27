@@ -8,7 +8,7 @@ include:
   - php.fpm.service
   {%- endif %}
 
-{%- for extension, params in php.get('extensions', {}).iteritems() %}
+{%- for extension, params in php.get('extensions', {}).items() %}
   {%- if params.provider == 'pecl' %}
     {%- if params.header_packages is defined %}
 
