@@ -9,7 +9,7 @@ include:
     'FreeBSD': php.pear_package_suffix,
 }
 , grain="os_family"
-, merge=salt['pillar.get']('php:version'), default='Debian') %}
+, default='Debian') %}
 
 php_pear_package:
   pkg.installed:

@@ -7,7 +7,7 @@ php_packages:
   pkg.installed:
     - pkgs:
       {%- for package_suffix in php.packages %}
-        {%- if php.major_version == '7' and package_suffix in ['apcu', 'apcu-bc'] %}
+        {%- if php.major_version == '7' %}
       - {{ 'php-' ~ package_suffix }}
         {%- else %}
       - {{ php.package_prefix ~ package_suffix }}

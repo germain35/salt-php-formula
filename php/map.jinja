@@ -9,23 +9,25 @@
 {## Start with defaults from defaults.yaml ##}
 {% import_yaml 'php/defaults.yaml' as default_settings %}
 
-{% set version = salt['grains.filter_by']({
-    'Debian': salt['grains.filter_by']({
-        'Debian': salt['grains.filter_by']({
-            'jessie': '5.x',
-            'stretch': '7.0',
-            'default': '7.0'
-        }, grain="oscodename"),
-        'Ubuntu': salt['grains.filter_by']({
-            'xenial': '7.0',
-            'zesty': '7.0',
-            'default': '7.0'
-        }, grain="oscodename"),
-    }, grain="os"),
-}
-, grain="os_family"
-, merge=salt['pillar.get']('php:version')) %}
+{% set version = salt['pillar.get']('php:version', False) %}
 
+{% if not version %}
+    {% set version = salt['grains.filter_by']({
+        'Debian': salt['grains.filter_by']({
+            'Debian': salt['grains.filter_by']({
+                'jessie': '5.x',
+                'stretch': '7.0',
+                'default': '7.0'
+            }, grain="oscodename"),
+            'Ubuntu': salt['grains.filter_by']({
+                'xenial': '7.0',
+                'bionic': '7.2',
+                'default': '7.0'
+            }, grain="oscodename"),
+        }, grain="os"),
+    }
+    , grain="os_family") %}
+{% endif %}
 
 {% if osfamily == 'Debian' %}
     {% if version|regex_search('^7.*') > 0 %}

@@ -23,7 +23,7 @@ php_extension_{{extension}}_header_packages:
     {%- if params.source is defined and salt['file.file_exists'](params.source) %}
 php_extension_{{extension}}:
   cmd.run:
-    - name: printf "\n" | pecl install --offline {% if params.force is defined %}--force {% endif %}{{params.source}}
+    - name: printf "\n" | pecl install --offline --force {{params.source}}
     - require_in:
       - file: php_extension_{{extension}}_ini_file
     - require:
