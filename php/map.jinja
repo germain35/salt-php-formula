@@ -30,7 +30,7 @@
 {% endif %}
 
 {% if osfamily == 'Debian' %}
-    {% if version|regex_search('^7.*') > 0 %}
+    {% if version|string|regex_search('^7.*') > 0 %}
         {% set globals_map = {
             'major_version': '7',
             'version': version,
